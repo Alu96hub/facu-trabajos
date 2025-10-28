@@ -148,6 +148,16 @@
             gap: 10px;
         }
         
+        .encargo-destacado {
+            background-color: var(--amarillo-claro);
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: var(--marron-oscuro);
+            border-left: 4px solid var(--amarillo);
+        }
+        
         /* Products grid */
         .products-section h2 {
             margin-bottom: 20px;
@@ -205,6 +215,10 @@
         
         .product-availability.unavailable {
             background-color: var(--peligro);
+        }
+        
+        .product-availability.ocasional {
+            background-color: #ff9800;
         }
         
         .product-info {
@@ -294,6 +308,27 @@
             cursor: not-allowed;
         }
         
+        /* Selector de ingredientes para facturas */
+        .flavor-selector {
+            margin-bottom: 15px;
+        }
+        
+        .flavor-selector label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--marron);
+        }
+        
+        .flavor-select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: white;
+            font-size: 1rem;
+        }
+        
         .recurrent-delivery {
             margin-top: 15px;
             padding-top: 15px;
@@ -344,12 +379,12 @@
             font-weight: bold;
         }
         
-        /* Cart sidebar */
+        /* Cart sidebar - MEJORADO PARA RESPONSIVIDAD */
         .cart-sidebar {
             position: fixed;
             top: 0;
-            right: -400px;
-            width: 380px;
+            right: -100%;
+            width: 100%;
             height: 100vh;
             background-color: var(--blanco);
             box-shadow: -5px 0 15px rgba(0,0,0,0.1);
@@ -382,6 +417,8 @@
         
         .cart-items {
             margin-bottom: 20px;
+            max-height: 40vh;
+            overflow-y: auto;
         }
         
         .cart-item {
@@ -401,6 +438,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-shrink: 0;
         }
         
         .cart-item-image i {
@@ -410,11 +448,13 @@
         
         .cart-item-details {
             flex: 1;
+            min-width: 0; /* Para evitar que el contenido se desborde */
         }
         
         .cart-item-name {
             font-weight: bold;
             margin-bottom: 5px;
+            word-break: break-word;
         }
         
         .cart-item-price {
@@ -425,6 +465,8 @@
         .cart-item-quantity {
             display: flex;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
         }
         
         .remove-item {
@@ -433,12 +475,18 @@
             color: var(--peligro);
             cursor: pointer;
             margin-left: auto;
+            font-size: 0.9rem;
+            padding: 5px;
         }
         
         .cart-summary {
             margin-top: 20px;
             padding-top: 20px;
             border-top: 1px solid #eee;
+            position: sticky;
+            bottom: 0;
+            background-color: var(--blanco);
+            padding-bottom: 20px;
         }
         
         .summary-row {
@@ -578,14 +626,20 @@
         }
         
         /* Responsive */
+        @media (min-width: 768px) {
+            .cart-sidebar {
+                width: 380px;
+                right: -400px;
+            }
+            
+            .cart-sidebar.active {
+                right: 0;
+            }
+        }
+        
         @media (max-width: 768px) {
             .products-grid {
                 grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            }
-            
-            .cart-sidebar {
-                width: 100%;
-                right: -100%;
             }
             
             .hero h2 {
@@ -594,6 +648,17 @@
             
             .nav-links {
                 display: none;
+            }
+            
+            .cart-item {
+                flex-direction: column;
+            }
+            
+            .cart-item-image {
+                width: 100%;
+                height: 120px;
+                margin-right: 0;
+                margin-bottom: 10px;
             }
         }
         
@@ -616,6 +681,10 @@
             
             .hero h2 {
                 font-size: 1.8rem;
+            }
+            
+            .cart-sidebar {
+                padding: 15px;
             }
         }
     </style>
@@ -652,6 +721,9 @@
         <!-- Delivery Info -->
         <section class="delivery-info">
             <h3><i class="fas fa-clock"></i> Horarios de Reparto</h3>
+            <div class="encargo-destacado">
+                ¡Encargue hoy y empiece a recibir mañana!
+            </div>
             <p>Lunes a Viernes de 8:00 AM a 11:30 AM</p>
             <p>Puedes seleccionar tu horario de entrega preferido durante el proceso de compra</p>
         </section>
@@ -797,7 +869,7 @@
                 <div class="product-card">
                     <div class="product-image">
                         <i class="fas fa-drumstick-bite"></i>
-                        <span class="product-availability">Disponible</span>
+                        <span class="product-availability ocasional">Ocasional</span>
                     </div>
                     <div class="product-info">
                         <h3>Pan con Chicharrón</h3>
@@ -864,69 +936,33 @@
                     </div>
                 </div>
                 
+                <!-- Facturas personalizadas -->
                 <div class="product-card">
                     <div class="product-image">
                         <i class="fas fa-pastafarianism"></i>
                         <span class="product-availability">Disponible</span>
                     </div>
                     <div class="product-info">
-                        <h3>Facturas 1</h3>
-                        <div class="product-price">$1400</div>
+                        <h3>Facturas Personalizadas</h3>
+                        <div class="product-price">$700 c/u</div>
                         <div class="product-details">
-                            <div class="product-cant">Unidades: 2 (1 dulce de leche + 1 crema pastelera)</div>
-                            <div class="product-clarification">Precio por paquete de 2 unidades</div>
+                            <div class="product-cant">Selecciona el tipo de factura</div>
+                            <div class="product-clarification">Precio por unidad</div>
                         </div>
-                        <div class="product-ingredientes">Harina, manteca, azúcar, dulce de leche, crema pastelera</div>
+                        <div class="flavor-selector">
+                            <label for="facturas-flavor">Selecciona el relleno:</label>
+                            <select id="facturas-flavor" class="flavor-select">
+                                <option value="Crema Pastelera">Crema Pastelera</option>
+                                <option value="Dulce de Leche">Dulce de Leche</option>
+                                <option value="Dulce de Membrillo">Dulce de Membrillo</option>
+                            </select>
+                        </div>
                         <div class="quantity-selector">
                             <button class="quantity-btn minus">-</button>
                             <input type="text" class="quantity-input" value="1" readonly>
                             <button class="quantity-btn plus">+</button>
                         </div>
-                        <button class="add-to-cart">Agregar al Carrito</button>
-                    </div>
-                </div>
-                
-                <div class="product-card">
-                    <div class="product-image">
-                        <i class="fas fa-pastafarianism"></i>
-                        <span class="product-availability">Disponible</span>
-                    </div>
-                    <div class="product-info">
-                        <h3>Facturas 2</h3>
-                        <div class="product-price">$1400</div>
-                        <div class="product-details">
-                            <div class="product-cant">Unidades: 2 (1 dulce de leche + 1 crema pastelera y membrillo)</div>
-                            <div class="product-clarification">Precio por paquete de 2 unidades</div>
-                        </div>
-                        <div class="product-ingredientes">Harina, manteca, azúcar, dulce de leche, crema pastelera, membrillo</div>
-                        <div class="quantity-selector">
-                            <button class="quantity-btn minus">-</button>
-                            <input type="text" class="quantity-input" value="1" readonly>
-                            <button class="quantity-btn plus">+</button>
-                        </div>
-                        <button class="add-to-cart">Agregar al Carrito</button>
-                    </div>
-                </div>
-                
-                <div class="product-card">
-                    <div class="product-image">
-                        <i class="fas fa-pastafarianism"></i>
-                        <span class="product-availability">Disponible</span>
-                    </div>
-                    <div class="product-info">
-                        <h3>Facturas 3</h3>
-                        <div class="product-price">$1400</div>
-                        <div class="product-details">
-                            <div class="product-cant">Unidades: 2 (1 membrillo + 1 crema pastelera)</div>
-                            <div class="product-clarification">Precio por paquete de 2 unidades</div>
-                        </div>
-                        <div class="product-ingredientes">Harina integral, manteca, miel, membrillo, crema pastelera</div>
-                        <div class="quantity-selector">
-                            <button class="quantity-btn minus">-</button>
-                            <input type="text" class="quantity-input" value="1" readonly>
-                            <button class="quantity-btn plus">+</button>
-                        </div>
-                        <button class="add-to-cart">Agregar al Carrito</button>
+                        <button class="add-to-cart" data-product="Facturas Personalizadas" data-price="700">Agregar al Carrito</button>
                     </div>
                 </div>
                 
@@ -934,7 +970,7 @@
                 <div class="product-card">
                     <div class="product-image">
                         <i class="fas fa-cookie"></i>
-                        <span class="product-availability">Disponible</span>
+                        <span class="product-availability ocasional">Ocasional</span>
                     </div>
                     <div class="product-info">
                         <h3>Galletitas Pepas</h3>
@@ -956,7 +992,7 @@
                 <div class="product-card">
                     <div class="product-image">
                         <i class="fas fa-cookie"></i>
-                        <span class="product-availability">Disponible</span>
+                        <span class="product-availability ocasional">Ocasional</span>
                     </div>
                     <div class="product-info">
                         <h3>Galletitas de Miel</h3>
@@ -978,7 +1014,7 @@
                 <div class="product-card">
                     <div class="product-image">
                         <i class="fas fa-cookie"></i>
-                        <span class="product-availability">Disponible</span>
+                        <span class="product-availability ocasional">Ocasional</span>
                     </div>
                     <div class="product-info">
                         <h3>Palmeritas</h3>
@@ -1000,7 +1036,7 @@
                 <div class="product-card">
                     <div class="product-image">
                         <i class="fas fa-cookie"></i>
-                        <span class="product-availability unavailable">Ocasional</span>
+                        <span class="product-availability ocasional">Ocasional</span>
                     </div>
                     <div class="product-info">
                         <h3>Malteadas</h3>
@@ -1140,9 +1176,16 @@
             addToCartButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     const productCard = this.closest('.product-card');
-                    const productName = productCard.querySelector('h3').textContent;
-                    const productPrice = parseFloat(productCard.querySelector('.product-price').textContent.replace('$', ''));
+                    let productName = productCard.querySelector('h3').textContent;
+                    let productPrice = parseFloat(productCard.querySelector('.product-price').textContent.replace('$', '').replace(' c/u', ''));
                     const quantity = parseInt(productCard.querySelector('.quantity-input').value);
+                    
+                    // Para las facturas personalizadas, agregamos el tipo seleccionado
+                    if (productName === "Facturas Personalizadas") {
+                        const flavorSelect = productCard.querySelector('.flavor-select');
+                        const selectedFlavor = flavorSelect.options[flavorSelect.selectedIndex].text;
+                        productName = `Factura de ${selectedFlavor}`;
+                    }
                     
                     // Verificar si el producto ya está en el carrito
                     const existingItem = cart.find(item => item.name === productName);
