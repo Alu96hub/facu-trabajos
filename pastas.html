@@ -17,6 +17,7 @@
             --texto: #333;
             --exito: #4caf50;
             --peligro: #f44336;
+            --naranja: #ff9800;
         }
         
         * {
@@ -145,6 +146,16 @@
             display: flex;
             align-items: center;
             gap: 10px;
+        }
+        
+        .encargo-destacado {
+            background-color: #fff3cd;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-weight: bold;
+            color: #856404;
+            border-left: 4px solid var(--naranja);
         }
         
         /* Products grid */
@@ -304,12 +315,12 @@
             transform: scale(1.05);
         }
         
-        /* Cart sidebar */
+        /* Cart sidebar - MEJORADO PARA RESPONSIVIDAD */
         .cart-sidebar {
             position: fixed;
             top: 0;
-            right: -400px;
-            width: 380px;
+            right: -100%;
+            width: 100%;
             height: 100vh;
             background-color: var(--blanco);
             box-shadow: -5px 0 15px rgba(0,0,0,0.1);
@@ -342,6 +353,8 @@
         
         .cart-items {
             margin-bottom: 20px;
+            max-height: 40vh;
+            overflow-y: auto;
         }
         
         .cart-item {
@@ -361,6 +374,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            flex-shrink: 0;
         }
         
         .cart-item-image i {
@@ -370,11 +384,13 @@
         
         .cart-item-details {
             flex: 1;
+            min-width: 0; /* Para evitar que el contenido se desborde */
         }
         
         .cart-item-name {
             font-weight: bold;
             margin-bottom: 5px;
+            word-break: break-word;
         }
         
         .cart-item-flavor {
@@ -391,6 +407,8 @@
         .cart-item-quantity {
             display: flex;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 5px;
         }
         
         .remove-item {
@@ -399,12 +417,18 @@
             color: var(--peligro);
             cursor: pointer;
             margin-left: auto;
+            font-size: 0.9rem;
+            padding: 5px;
         }
         
         .cart-summary {
             margin-top: 20px;
             padding-top: 20px;
             border-top: 1px solid #eee;
+            position: sticky;
+            bottom: 0;
+            background-color: var(--blanco);
+            padding-bottom: 20px;
         }
         
         .summary-row {
@@ -544,6 +568,17 @@
         }
         
         /* Responsive */
+        @media (min-width: 768px) {
+            .cart-sidebar {
+                width: 380px;
+                right: -400px;
+            }
+            
+            .cart-sidebar.active {
+                right: 0;
+            }
+        }
+        
         @media (max-width: 768px) {
             .products-grid {
                 grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -560,6 +595,17 @@
             
             .nav-links {
                 display: none;
+            }
+            
+            .cart-item {
+                flex-direction: column;
+            }
+            
+            .cart-item-image {
+                width: 100%;
+                height: 120px;
+                margin-right: 0;
+                margin-bottom: 10px;
             }
         }
         
@@ -582,6 +628,10 @@
             
             .hero h2 {
                 font-size: 1.8rem;
+            }
+            
+            .cart-sidebar {
+                padding: 15px;
             }
         }
     </style>
@@ -618,6 +668,9 @@
         <!-- Delivery Info -->
         <section class="delivery-info">
             <h3><i class="fas fa-clock"></i> Horarios de Reparto</h3>
+            <div class="encargo-destacado">
+                ¡Encargue hoy y empiece a recibir mañana!
+            </div>
             <p>Lunes a Viernes de 11:00 AM a 12:00 PM</p>
             <p>Realiza tu pedido con anticipación para asegurar disponibilidad</p>
         </section>
